@@ -1,8 +1,8 @@
 {
-  "name": "",
-  "version": "",
-  "description": "",
-  "author": "",
+  "name": "chat-app",
+  "version": "1.0",
+  "description": "A small site for universal chatting.",
+  "author": "Jack Richard",
   "scripts": {
     "start": "node server.improved.js"
   },

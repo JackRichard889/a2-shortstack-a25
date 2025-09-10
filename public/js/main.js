@@ -1,27 +1,60 @@
 // FRONT-END (CLIENT) JAVASCRIPT HERE
 
-const submit = async function( event ) {
-  // stop form submission from trying to load
-  // a new .html page for displaying results...
-  // this was the original browser behavior and still
-  // remains to this day
-  event.preventDefault()
-  
-  const input = document.querySelector( "#yourname" ),
-        json = { yourname: input.value },
-        body = JSON.stringify( json )
 
-  const response = await fetch( "/submit", {
-    method:"POST",
-    body 
-  })
+let lastMessageAt = 0;
 
-  const text = await response.text()
-
-  console.log( "text:", text )
+/* Formatting for a single message to display to the user. */
+const displayMessage = function (message) {
+    const date = new Date(message.sentAt);
+    const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    return `<div><p><strong style="color: ${message.fromStyle};">${message.from}: </strong>${message.message}</p> <span>${formattedDate}</span></div>`;
 }
 
-window.onload = function() {
-   const button = document.querySelector("button");
-  button.onclick = submit;
+/* Show messages from server to the user. */
+const displayMessages = function (messages) {
+    const container = document.querySelector("#messages");
+    container.innerHTML = messages.map(displayMessage).join("");
+
+    // If there is a new message, scroll to the bottom to show it.
+    if (lastMessageAt < messages[messages.length - 1].sentAt) {
+        container.scroll({top: container.scrollHeight, behavior: 'smooth'});
+        lastMessageAt = messages[messages.length - 1].sentAt;
+    }
+}
+
+/* Send new message to server. */
+const submit = async function (event) {
+    event.preventDefault();
+
+    const message = document.querySelector("#message"),
+        from = document.querySelector("#from"),
+        json = {from: from.value || 'Anonymous', message: message.value, sentAt: Date.now()},
+        body = JSON.stringify(json);
+
+    message.value = '';
+
+    const response = await fetch("/messages", {
+        method: "POST",
+        body
+    });
+
+    const messages = await response.json();
+
+    displayMessages(messages);
+}
+
+/* Get all messages from the server. */
+const update = async function () {
+    const response = await fetch("/messages");
+    const messages = await response.json();
+
+    displayMessages(messages);
+}
+
+window.onload = function () {
+    const button = document.querySelector("button");
+    button.onclick = submit;
+
+    // Start listening for messages.
+    setInterval(update, 2500);
 }

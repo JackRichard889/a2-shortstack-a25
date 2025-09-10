@@ -1,18 +1,28 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <title>CS4241 Assignment 2</title>
     <meta charset="utf-8">
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+
     <!-- get rid of favicon error -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-  </head>
-  <body>
+</head>
+<body>
+<div class="card">
+    <div id="messages">
+        <p>Connecting to the server...</p>
+    </div>
     <form>
-      <input type="text" id="yourname" value="your name here">
-      <button>submit</button>
+        <input type="text" id="from" placeholder="Set a display name" aria-label="Display Name">
+        <input type="text" id="message" placeholder="Type a message..." aria-label="Message" required>
+        <button type="submit">Send</button>
     </form>
-  </body>
+</div>
+</body>
 </html>
